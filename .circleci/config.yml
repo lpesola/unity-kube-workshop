@@ -27,20 +27,20 @@ jobs:
       - run:
           command: |
             echo Authenticating...
-            echo ${CI_ACCOUNT_TOKEN_BASE64} > .CI_ACCOUNT_TOKEN.json
+            echo ${CI_ACCOUNT_TOKEN} > .CI_ACCOUNT_TOKEN.json
             gcloud auth activate-service-account ${CI_USER} --key-file=.CI_ACCOUNT_TOKEN.json >/dev/null 2>&1
             gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://gcr.io >/dev/null 2>&1
 
-            set -x
-            image=eu.gcr.io/kube-workshop-255710/unity-kube-service
-
-            docker build -t ${image}:${CIRCLE_SHA1} .
-            docker push ${image}:${CIRCLE_SHA1}
-
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              docker tag ${image}:${CIRCLE_SHA1} ${image}:master
-              docker push ${image}:master
-            fi
+#            set -x
+#            image=eu.gcr.io/kube-workshop-255710/unity-kube-service
+#
+#            docker build -t ${image}:${CIRCLE_SHA1} .
+#            docker push ${image}:${CIRCLE_SHA1}
+#
+#            if [ "${CIRCLE_BRANCH}" == "master" ]; then
+#              docker tag ${image}:${CIRCLE_SHA1} ${image}:master
+#              docker push ${image}:master
+#            fi
 
   deploy:
     description: Deploy service to Google Kubernetes Engine
